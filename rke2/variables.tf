@@ -1,5 +1,4 @@
 variable "aws_profile" {
-  default = "rancher-eng"
   type = string
   description = "AWS credential profile"
 }
