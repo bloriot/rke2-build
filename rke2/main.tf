@@ -11,7 +11,7 @@ locals {
 }
 
 provider "aws" {
-  region  = "us-east-2"
+  region  = "eu-west-3"
   profile = var.aws_profile
 }
 
