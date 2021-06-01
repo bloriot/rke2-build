@@ -10,27 +10,18 @@ data "aws_subnet" "selected" {
   id = "${tolist(data.aws_subnet_ids.available.ids)[1]}"
 }
 
-data "aws_ami" "ubuntu" {
+# Use latest SLES 15 SP2 AMI
+data "aws_ami" "sles" {
   most_recent = true
-  owners      = ["099720109477"]
+  owners = ["013907871322"] # Amazon
 
   filter {
     name   = "name"
-    values = ["ubuntu-minimal/images/*/ubuntu-focal-20.04-*"]
+    values = ["suse-sles-15-sp2-*-hvm-ssd-x86_64"]
   }
 
   filter {
     name   = "virtualization-type"
     values = ["hvm"]
-  }
-
-  filter {
-    name   = "root-device-type"
-    values = ["ebs"]
-  }
-
-  filter {
-    name   = "architecture"
-    values = ["x86_64"]
   }
 }

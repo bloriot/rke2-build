@@ -119,7 +119,7 @@ resource "aws_lb_target_group_attachment" "rke2-nlb-supervisor-attachement" {
 resource "aws_instance" "rke2-server" {
   count = var.server_count
   instance_type = var.server_instance_type
-  ami           = data.aws_ami.ubuntu.id
+  ami           = data.aws_ami.sles.id
   user_data     = base64encode(templatefile("${path.module}/files/server_userdata.tmpl",
   {
     extra_ssh_keys = var.extra_ssh_keys,
@@ -155,7 +155,7 @@ module "rke2-pool-agent-asg" {
   name          = "${local.name}-pool"
   asg_name      = "${local.name}-pool"
   instance_type = var.agent_instance_type
-  image_id      = data.aws_ami.ubuntu.id
+  image_id      = data.aws_ami.sles.id
   user_data     = base64encode(templatefile("${path.module}/files/agent_userdata.tmpl",
   {
     rke2_url = aws_lb.rke2-master-nlb.dns_name,
@@ -196,7 +196,7 @@ module "rke2-pool-agent-asg" {
 resource "null_resource" "get-kubeconfig" {
   provisioner "local-exec" {
     interpreter = ["bash", "-c"]
-    command     = "until ssh -o 'UserKnownHostsFile=/dev/null' -o 'StrictHostKeyChecking=no' -i ${var.ssh_key_path} ubuntu@${aws_instance.rke2-server[0].public_ip} 'sudo sed \"s/localhost/$var.domain_name}/g;s/127.0.0.1/${var.domain_name}/g\" /etc/rancher/rke2/rke2.yaml' >| ./kubeconfig.yaml; do sleep 5; done"
+    command     = "until ssh -o 'UserKnownHostsFile=/dev/null' -o 'StrictHostKeyChecking=no' -i ${var.ssh_key_path} ec2-user@${aws_instance.rke2-server[0].public_ip} 'sudo sed \"s/localhost/${aws_lb.rke2-master-nlb.dns_name}/g;s/127.0.0.1/${aws_lb.rke2-master-nlb.dns_name}/g\" /etc/rancher/rke2/rke2.yaml' >| ./kubeconfig.yaml; do sleep 5; done"
   }
 }
 

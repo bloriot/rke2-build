@@ -6,13 +6,11 @@ ssh_authorized_keys:
 %{ endfor }
 %{ endif }
 runcmd:
-- apt-get update
-- apt-get install -y iptables git telnet vim software-properties-common resolvconf linux-headers-$(uname -r)
-- echo "nameserver 1.1.1.1" > /etc/resolvconf/resolv.conf.d/tail
+- zypper ref
+- zypper install -y git vim
 - echo "RateLimitIntervalSec=0" >> /etc/systemd/journald.conf
 - echo "RateLimitBurst=0" >> /etc/systemd/journald.conf
 - systemctl restart systemd-journald.service
-- systemctl start resolvconf
 - /opt/rke2/run_rke2.sh
 write_files:
 - path: /etc/rancher/rke2/config.yaml
