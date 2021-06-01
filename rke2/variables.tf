@@ -1,5 +1,6 @@
 variable "aws_profile" {
-  type = string
+  type        = string
+  default     = "admin_api"
   description = "AWS credential profile"
 }
 
@@ -9,7 +10,7 @@ variable "server_instance_type" {
 
 variable "rke2_version" {
   type        = string
-	default     = "v0.0.1-alpha.5"
+  default     = "v0.0.1-alpha.5"
   description = "Version of rke2 to install"
 }
 
